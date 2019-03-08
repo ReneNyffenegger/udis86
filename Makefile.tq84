@@ -1,0 +1,27 @@
+CFLAGS=-c
+
+all: tq84/symresolve
+
+tq84/symresolve: tq84/udis86.o tq84/decode.o tq84/symresolve.o tq84/itab.o tq84/syn-intel.o tq84/syn.o
+	$(CC) $^ -o $@
+
+tq84/symresolve.o: tests/symresolve.c libudis86/itab.h
+	$(CC) $(CFLAGS) $< -o $@
+
+tq84/udis86.o: libudis86/udis86.c
+	$(CC) $(CFLAGS) $< -o $@
+
+tq84/decode.o: libudis86/decode.c
+	$(CC) $(CFLAGS) $< -o $@
+
+tq84/itab.o: libudis86/itab.c
+	$(CC) $(CFLAGS) $< -o $@
+
+tq84/syn-intel.o: libudis86/syn-intel.c
+	$(CC) $(CFLAGS) $< -o $@
+
+tq84/syn.o: libudis86/syn.c
+	$(CC) $(CFLAGS) $< -o $@
+
+libudis86/itab.h: docs/x86/optable.xml
+	python2 scripts/ud_itab.py docs/x86/optable.xml libudis86
